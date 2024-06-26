@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../auth/AuthContext";
 
 export default function SignUp() {
@@ -118,6 +118,12 @@ export default function SignUp() {
         value="Create Account"
         className="rounded-md w-full  md:w-[400px] px-[10px] py-[10px] focus:outline focus:outline-indigo-500 bg-slate-500 uppercase font-bold text-[13px] text-white active:scale-105"
       />
+      <p className="text-center text-white">
+        Already have an account:{" "}
+        <Link to="/login" className="text-blue-500 underline">
+          Log In
+        </Link>
+      </p>
     </form>
   );
 }
