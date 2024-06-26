@@ -65,7 +65,9 @@ export default function SignUp() {
       <h1 className="text-white text-[20px] uppercase text-center">
         Create User
       </h1>
-      {authorized ? <div className="text-center text-green-500">{message}</div> : null}
+      {authorized ? (
+        <div className="text-center text-green-500">{message}</div>
+      ) : null}
       <div>
         <input
           id="firstname"

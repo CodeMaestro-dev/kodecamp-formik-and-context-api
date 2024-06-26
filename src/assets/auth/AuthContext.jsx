@@ -12,10 +12,10 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -28,33 +28,50 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
         setUser(null);
       }
+      setLoading(false); // Set loading to false once auth state is determined
     });
+
     return () => unsubscribe();
   }, []);
 
   const SIGN_UP = async (email, password) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Error signing up: ", error);
+      throw error;
+    }
   };
 
   const LOG_IN = async (email, password) => {
-    const response = await signInWithEmailAndPassword(auth, email, password);
-    setUser(response.user);
-    localStorage.setItem("user", JSON.stringify(response.user));
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      setUser(response.user);
+      localStorage.setItem("user", JSON.stringify(response.user));
+    } catch (error) {
+      console.error("Error logging in: ", error);
+      throw error;
+    }
   };
-  
+
   const LOG_OUT = async () => {
-    await signOut(auth);
-    setUser(null);
-    localStorage.removeItem("user");
+    try {
+      await signOut(auth);
+      setUser(null);
+      localStorage.removeItem("user");
+    } catch (error) {
+      console.error("Error logging out: ", error);
+      throw error;
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, LOG_IN, SIGN_UP, LOG_OUT }}>
+    <AuthContext.Provider value={{ user, loading, LOG_IN, SIGN_UP, LOG_OUT }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.any,
+  children: PropTypes.node.isRequired,
 };

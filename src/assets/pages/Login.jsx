@@ -42,6 +42,7 @@ export default function SignUp() {
 
     try {
       await LOG_IN(email, password);
+      localStorage.setItem("dx_er3c22", email)
       setAuthorized(true);
       setMessage("User authorized. Redirecting to dashboard page....");
       return setTimeout(() => {
